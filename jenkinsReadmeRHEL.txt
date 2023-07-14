@@ -1,13 +1,25 @@
-sudo hostname ci
-sudo yum -y install unzip wget tree git
-sudo wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.rpm
-sudo yum install jdk-8u131-linux-x64.rpm -y
-sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-cd /etc/yum.repos.d/
-sudo curl -O https://pkg.jenkins.io/redhat-stable/jenkins.repo
-sudo yum -y install jenkins  --nobest
-sudo systemctl start jenkins
+#!/bin/bash
+# Author: Prof Legah
+# date: 25/08/2020
+# Installing Jenkins on RHEL 7/8, CentOS 7/8 or Amazon Linux OS
+# You can execute this script as user-data when launching your EC2 VM.
+#!/bin/bash
+# Author: Prof Legah
+# date: 25/08/2020
+# Installing Jenkins on RHEL 7/8, CentOS 7/8 or Amazon Linux OS
+# You can execute this script as user-data when launching your EC2 VM.
+sudo timedatectl set-timezone America/New_York
+sudo hostnamectl set-hostname jenkins
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+sudo yum -y upgrade
+# Add required dependencies for the jenkins package
+sudo yum -y install java-11-openjdk
+sudo yum -y install jenkins
+sudo systemctl daemon-reload
 sudo systemctl enable jenkins
+sudo systemctl start jenkins
 sudo systemctl status jenkins
-curl ifconfig.co  # To get the IP of the server and use it to open it in the brwoser with the port 8080
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword  # to get the initial admin password needed for the GUi configuration
+echo "echo of jenkins installation"
+sudo su - ec2-user
